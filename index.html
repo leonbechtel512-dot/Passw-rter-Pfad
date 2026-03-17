@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Passwort World</title>
+    
+    <!-- Tailwind CSS (für das Styling) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome (für die Icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- React & ReactDOM (für die Logik) -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel (übersetzt den React-Code direkt im Browser) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        /* Zusätzliche Animationen */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up { animation: fadeInUp 0.5s ease-out forwards; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+    </style>
+</head>
+<body>
+    <!-- Hier wird die React-App hineingeladen -->
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- ICON KOMPONENTEN (Ersatz für lucide-react) ---
+        const ShieldCheck = ({className}) => <i className={`fa-solid fa-shield-halved ${className}`}></i>;
+        const Key = ({className}) => <i className={`fa-solid fa-key ${className}`}></i>;
+        const AlertTriangle = ({className}) => <i className={`fa-solid fa-triangle-exclamation ${className}`}></i>;
+        const Lightbulb = ({className}) => <i className={`fa-solid fa-lightbulb ${className}`}></i>;
+        const PenTool = ({className}) => <i className={`fa-solid fa-pen ${className}`}></i>;
+        const ArrowRight = ({className}) => <i className={`fa-solid fa-arrow-right ${className}`}></i>;
+        const ArrowLeft = ({className}) => <i className={`fa-solid fa-arrow-left ${className}`}></i>;
+        const Star = ({className}) => <i className={`fa-solid fa-star ${className}`}></i>;
+        const Lock = ({className}) => <i className={`fa-solid fa-lock ${className}`}></i>;
+        const MapIcon = ({className}) => <i className={`fa-solid fa-map ${className}`}></i>;
+        const Unlock = ({className}) => <i className={`fa-solid fa-unlock ${className}`}></i>;
+        const Gamepad2 = ({className}) => <i className={`fa-solid fa-gamepad ${className}`}></i>;
+        const BookOpen = ({className}) => <i className={`fa-solid fa-book-open ${className}`}></i>;
+        const Trophy = ({className}) => <i className={`fa-solid fa-trophy ${className}`}></i>;
+        const Mail = ({className}) => <i className={`fa-solid fa-envelope ${className}`}></i>;
+        const Smartphone = ({className}) => <i className={`fa-solid fa-mobile-screen-button ${className}`}></i>;
+        const CheckCircle = ({className}) => <i className={`fa-solid fa-circle-check ${className}`}></i>;
+        const XCircle = ({className}) => <i className={`fa-solid fa-circle-xmark ${className}`}></i>;
+        const Home = ({className}) => <i className={`fa-solid fa-house ${className}`}></i>;
+
+        // --- MINISPIELE & LEVEL-KOMPONENTEN ---
+
+        const Level1_1 = ({ onComplete }) => (
+          <div className="space-y-6 text-lg animate-fade-in-up">
+            <div className="bg-blue-100 p-6 rounded-2xl border-4 border-blue-300">
+              <h3 className="font-bold text-2xl text-blue-800 mb-4 flex items-center gap-2">
+                <BookOpen /> Was ist ein Passwort?
+              </h3>
+              <p className="mb-4">Stell dir vor, du hast eine geheime Schatztruhe oder ein Tagebuch. Damit niemand hineinschauen kann, hängst du ein Vorhängeschloss daran. Den <strong>Schlüssel</strong> hast nur du!</p>
+              <p className="mb-4">Ein <strong>Passwort</strong> ist genau so ein Schlüssel – aber für das Internet oder deinen Computer.</p>
+              <p>Es sorgt dafür, dass nur <strong>DU</strong> an deine Sachen kommst und niemand in deinem Namen Quatsch machen kann. Deshalb darfst du es <strong>niemals</strong> verraten!</p>
+            </div>
+            <button onClick={onComplete} className="w-full py-4 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl border-b-4 border-green-700 active:border-b-0 active:translate-y-1 transition-all text-xl">
+              Hab ich verstanden! 👍
+            </button>
+          </div>
+        );
+
+        const Level1_2 = ({ onComplete }) => {
+          const [selected, setSelected] = useState({ handy: false, apfel: false, tagebuch: false, fahrrad: false });
+          
+          const toggle = (item) => setSelected(prev => ({ ...prev, [item]: !prev[item] }));
+          const isCorrect = selected.handy && !selected.apfel && selected.tagebuch && !selected.fahrrad;
+
+          return (
+            <div className="space-y-6 text-lg animate-fade-in-up">
+              <div className="bg-yellow-50 p-6 rounded-2xl border-4 border-yellow-300">
+                <h3 className="font-bold text-2xl text-yellow-800 mb-4 flex items-center gap-2">
+                  <Gamepad2 /> Wo fehlt das Schloss?
+                </h3>
+                <p className="mb-4">Klicke alle Dinge an, die normalerweise mit einem <strong>Passwort</strong> oder einer <strong>PIN</strong> geschützt werden sollten!</p>
+                
+                <div className="grid grid-cols-2 gap-4 mt-6">
+                  <button onClick={() => toggle('handy')} className={`p-4 rounded-xl border-4 transition-all ${selected.handy ? 'border-green-500 bg-green-100' : 'border-gray-200 bg-white hover:border-blue-300'}`}>📱 Smartphone</button>
+                  <button onClick={() => toggle('apfel')} className={`p-4 rounded-xl border-4 transition-all ${selected.apfel ? 'border-red-500 bg-red-100' : 'border-gray-200 bg-white hover:border-blue-300'}`}>🍎 Ein Apfel</button>
+                  <button onClick={() => toggle('tagebuch')} className={`p-4 rounded-xl border-4 transition-all ${selected.tagebuch ? 'border-green-500 bg-green-100' : 'border-gray-200 bg-white hover:border-blue-300'}`}>📖 Geheimes Tagebuch</button>
+                  <button onClick={() => toggle('fahrrad')} className={`p-4 rounded-xl border-4 transition-all ${selected.fahrrad ? 'border-red-500 bg-red-100' : 'border-gray-200 bg-white hover:border-blue-300'}`}>🚲 Fahrrad (Nutzt einen Schlüssel)</button>
+                </div>
+              </div>
+              
+              {isCorrect ? (
+                <button onClick={onComplete} className="w-full animate-bounce py-4 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl border-b-4 border-green-700 active:border-b-0 active:translate-y-1 transition-all text-xl">
+                  Super! Weiter geht's! 🎉
+                </button>
+              ) : (
+                <div className="text-center text-gray-500 font-bold">Wähle genau 2 richtige Dinge aus!</div>
+              )}
+            </div>
+          );
+        };
+
+        const Level1_3 = ({ onComplete }) => {
+          const [pw, setPw] = useState('');
+          return (
+            <div className="space-y-6 text-lg text-center animate-fade-in-up">
+              <ShieldCheck className="text-6xl mx-auto text-gray-700 mb-4 block" />
+              <h3 className="font-bold text-3xl text-gray-800">Boss: Der Türsteher</h3>
+              <p className="bg-gray-100 p-4 rounded-xl border-2 border-gray-300">"Halt! Wer in die Burg will, braucht ein Passwort. Fürs Erste reicht mir <strong>irgendein</strong> Wort, um zu sehen, ob du das Prinzip verstanden hast!"</p>
+              
+              <input 
+                type="text" 
+                value={pw} 
+                onChange={(e) => setPw(e.target.value)} 
+                placeholder="Tippe ein beliebiges Wort ein..."
+                className="w-full p-4 text-2xl border-4 border-gray-400 rounded-xl text-center focus:border-blue-500 focus:outline-none"
+              />
+              
+              {pw.length > 2 && (
+                <button onClick={onComplete} className="w-full py-4 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl border-b-4 border-purple-900 active:border-b-0 active:translate-y-1 transition-all text-xl">
+                  Burgtor öffnen! 🏰
+                </button>
+              )}
+            </div>
+          );
+        };
+
+        const Level2_1 = ({ onComplete }) => (
+          <div className="space-y-6 text-lg animate-fade-in-up">
+            <div className="bg-red-50 p-6 rounded-2xl border-4 border-red-300">
+              <h3 className="font-bold text-2xl text-red-800 mb-4 flex items-center gap-2">
+                <AlertTriangle /> Gefahr im Netz
+              </h3>
+              <p className="mb-4">Viele Menschen sind leider etwas faul und nehmen Passwörter, die man ganz leicht erraten kann.</p>
+              <div className="bg-white p-4 rounded-xl shadow-sm border-2 border-red-100 mb-4">
+                <p className="font-bold text-red-600 mb-2">Die Top 3 Flops:</p>
+                <ol className="list-decimal list-inside font-mono text-gray-700">
+                  <li>123456</li>
+                  <li>hallo123</li>
+                  <li>passwort</li>
+                </ol>
+              </div>
+              <p>Auch der <strong>eigene Name</strong>, der <strong>Name des Haustiers</strong> oder das <strong>Lieblingsessen</strong> sind katastrophale Passwörter. Hacker können diese in weniger als 1 Sekunde knacken!</p>
+            </div>
+            <button onClick={onComplete} className="w-full py-4 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl border-b-4 border-green-700 active:border-b-0 active:translate-y-1 transition-all text-xl">
+              Merke ich mir!
+            </button>
+          </div>
+        );
+
+        const Level2_2 = ({ onComplete }) => {
+          const [guess, setGuess] = useState('');
+          const isCorrect = guess.toLowerCase() === 'bello';
+
+          return (
+            <div className="space-y-6 text-lg animate-fade-in-up">
+              <div className="bg-gray-800 text-green-400 p-6 rounded-2xl border-4 border-gray-600 font-mono">
+                <h3 className="font-bold text-2xl text-white mb-4 flex items-center gap-2">
+                  <Gamepad2 /> Werde zum Hacker!
+                </h3>
+                <p className="mb-4 text-green-300">Du bist jetzt der Einbrecher. Du willst in das Profil von Max rein.</p>
+                <div className="bg-gray-900 p-4 rounded-xl border border-gray-700 mb-6">
+                  <p className="text-gray-400">🔍 Akte über Max:</p>
+                  <ul className="list-disc list-inside mt-2 text-white">
+                    <li>Lieblingsverein: BVB</li>
+                    <li>Hund: <strong>Bello</strong></li>
+                    <li>Alter: 11</li>
+                  </ul>
+                </div>
+                <p className="mb-2">Max war faul beim Passwort. Welches schlechte Passwort hat er wohl genommen?</p>
+                <input 
+                  type="text" 
+                  value={guess} 
+                  onChange={(e) => setGuess(e.target.value)} 
+                  placeholder="Passwort erraten..."
+                  className="w-full p-4 text-xl border-2 border-green-500 bg-black text-green-400 rounded-xl focus:outline-none"
+                />
+              </div>
+              
+              {isCorrect ? (
+                <div className="animate-fade-in-up">
+                  <p className="text-red-600 font-bold mb-4 text-center">Erschreckend einfach, oder? Deshalb: Nie Namen verwenden!</p>
+                  <button onClick={onComplete} className="w-full py-4 bg-green-500 text-white font-bold rounded-xl border-b-4 border-green-700 active:border-b-0 active:translate-y-1 transition-all text-xl">
+                    Lektion gelernt!
+                  </button>
+                </div>
+              ) : (
+                <div className="text-center text-gray-500 font-bold">Rate weiter (Tipp: Name des Haustiers)</div>
+              )}
+            </div>
+          );
+        };
+
+        const Level2_3 = ({ onComplete }) => {
+          const [failed, setFailed] = useState(false);
+
+          return (
+            <div className="space-y-6 text-lg text-center animate-fade-in-up">
+              <h3 className="font-bold text-3xl text-gray-800 mb-2">Boss: Die Phishing-Falle</h3>
+              <p className="text-gray-600 mb-6">Besiege das Phishing-Monster, indem du die richtige Entscheidung triffst!</p>
+              
+              <div className="bg-white p-6 rounded-2xl border-4 border-blue-200 shadow-lg text-left relative overflow-hidden">
+                <div className="flex items-center gap-3 border-b-2 border-gray-100 pb-4 mb-4">
+                  <Mail className="text-4xl text-blue-500" />
+                  <div>
+                    <p className="font-bold">Von: Fortnite-Support-Offiziell@hacker-mail.ru</p>
+                    <p className="text-sm text-gray-500">Betreff: 10.000 V-Bucks geschenkt!!!</p>
+                  </div>
+                </div>
+                <p className="mb-6">Hallo Gamer! Du hast heute unglaubliches Glück. Wir schenken dir 10.000 V-Bucks. Klicke einfach auf den Button und gib dein Passwort ein, um sie abzuholen!</p>
+                
+                <div className="flex flex-col gap-4 relative z-10">
+                  <button 
+                    onClick={() => setFailed(true)} 
+                    className="py-3 bg-blue-500 text-white font-bold rounded-xl hover:bg-blue-600 transition-colors"
+                  >
+                    Auf den Link klicken & Passwort eingeben!
+                  </button>
+                  <button 
+                    onClick={onComplete} 
+                    className="py-3 bg-red-500 text-white font-bold rounded-xl border-b-4 border-red-700 active:border-b-0 active:translate-y-1 transition-all"
+                  >
+                    Sofort löschen! Das ist ein Trick! 🗑️
+                  </button>
+                </div>
+
+                {failed && (
+                  <div className="absolute inset-0 bg-red-900 text-white p-6 flex flex-col justify-center items-center text-center animate-fade-in z-20">
+                    <XCircle className="text-5xl mb-4 text-red-400" />
+                    <h4 className="text-2xl font-bold mb-2">OH NEIN!</h4>
+                    <p className="mb-6">Das war eine Falle (Phishing). Der Hacker hat jetzt dein Passwort und deinen Account geklaut!</p>
+                    <button onClick={() => setFailed(false)} className="px-6 py-2 bg-white text-red-900 font-bold rounded-lg">Nochmal versuchen</button>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        };
+
+        const Level3_1 = ({ onComplete }) => (
+          <div className="space-y-6 text-lg animate-fade-in-up">
+            <div className="bg-green-50 p-6 rounded-2xl border-4 border-green-300">
+              <h3 className="font-bold text-2xl text-green-800 mb-4 flex items-center gap-2">
+                <Lightbulb /> Der Meister-Trick
+              </h3>
+              <p className="mb-4">Wie merkt man sich ein Passwort, das wie Kauderwelsch aussieht? Mit der <strong>Merksatz-Methode</strong>!</p>
+              
+              <div className="bg-white p-4 rounded-xl shadow-sm border-2 border-green-100 mb-4 space-y-4">
+                <div>
+                  <p className="font-bold text-gray-700">1. Denke dir einen lustigen Satz aus:</p>
+                  <p className="italic text-blue-600 bg-blue-50 p-2 rounded">"Ich esse jeden Tag 3 rote Äpfel!"</p>
+                </div>
+                <div>
+                  <p className="font-bold text-gray-700">2. Nimm nur den ersten Buchstaben von jedem Wort (+ Zahlen/Zeichen):</p>
+                  <p className="font-mono text-3xl text-green-600 font-bold mt-2">IejT3rÄ!</p>
+                </div>
+              </div>
+              <p>Diesen Satz vergisst du nie, aber für Hacker ist das Passwort unknackbar!</p>
+            </div>
+            <button onClick={onComplete} className="w-full py-4 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl border-b-4 border-green-700 active:border-b-0 active:translate-y-1 transition-all text-xl">
+              Das ist genial!
+            </button>
+          </div>
+        );
+
+        const Level3_2 = ({ onComplete }) => {
+          const [input, setInput] = useState('');
+          const correct = "MHBi5Ja!";
+          
+          return (
+            <div className="space-y-6 text-lg animate-fade-in-up">
+              <div className="bg-purple-50 p-6 rounded-2xl border-4 border-purple-300">
+                <h3 className="font-bold text-2xl text-purple-800 mb-4 flex items-center gap-2">
+                  <Gamepad2 /> Übersetzer-Training
+                </h3>
+                <p className="mb-6">Mach aus diesem Satz ein Passwort (achte auf Groß- und Kleinschreibung!):</p>
+                
+                <p className="text-2xl font-bold text-center bg-white p-4 rounded-xl border-2 border-purple-200 mb-6">
+                  "Mein Hund Bello ist 5 Jahre alt!"
+                </p>
+
+                <input 
+                  type="text" 
+                  value={input} 
+                  onChange={(e) => setInput(e.target.value)} 
+                  placeholder="Passwort hier eintippen..."
+                  className="w-full p-4 text-2xl font-mono border-4 border-purple-400 rounded-xl text-center focus:border-purple-600 focus:outline-none"
+                />
+              </div>
+
+              {input === correct ? (
+                 <button onClick={onComplete} className="w-full animate-bounce py-4 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl border-b-4 border-green-700 active:border-b-0 active:translate-y-1 transition-all text-xl">
+                 Korrekt! Weiter so! 🌟
+               </button>
+              ) : (
+                <div className="text-center text-gray-500">Tipp: Nimm den allerersten Buchstaben von jedem Wort. Die "5" und das "!" gehören auch dazu!</div>
+              )}
+            </div>
+          );
+        };
+
+        const Level3_3 = ({ onComplete }) => {
+          const [input, setInput] = useState('');
+          const correct = "IsjT2SM!";
+          
+          return (
+            <div className="space-y-6 text-lg text-center animate-fade-in-up">
+              <h3 className="font-bold text-3xl text-gray-800 mb-2">Boss: Der Rätselmeister</h3>
+              <p className="text-gray-600 mb-6">Nur wer fehlerfrei übersetzt, darf in Welt 4!</p>
+              
+              <div className="bg-gray-100 p-6 rounded-2xl border-4 border-gray-300">
+                <p className="text-xl font-bold mb-6">
+                  "Ich spiele jeden Tag 2 Stunden Minecraft!"
+                </p>
+
+                <input 
+                  type="text" 
+                  value={input} 
+                  onChange={(e) => setInput(e.target.value)} 
+                  placeholder="Dein Passwort..."
+                  className="w-full p-4 text-2xl font-mono border-4 border-gray-400 rounded-xl text-center focus:border-blue-500 focus:outline-none mb-6"
+                />
+
+                {input === correct ? (
+                   <button onClick={onComplete} className="w-full py-4 bg-purple-600 text-white font-bold rounded-xl border-b-4 border-purple-900 active:border-b-0 active:translate-y-1 transition-all text-xl">
+                   Boss besiegt! 🏰
+                 </button>
+                ) : (
+                  <p className="text-red-500 font-bold">{input.length > 0 ? 'Noch nicht ganz richtig...' : 'Ich warte...'}</p>
+                )}
+              </div>
+            </div>
+          );
+        };
+
+        const Level4_1 = ({ onComplete }) => (
+          <div className="space-y-6 text-lg animate-fade-in-up">
+            <div className="bg-yellow-50 p-6 rounded-2xl border-4 border-yellow-300">
+              <h3 className="font-bold text-2xl text-yellow-800 mb-4 flex items-center gap-2">
+                <PenTool /> Der Geheim-Safe (Arbeitsblatt!)
+              </h3>
+              <p className="mb-4">Ein starkes Passwort nützt nichts, wenn du es auf einen Zettel schreibst und ihn auf den Tisch legst.</p>
+              <ul className="list-disc list-inside space-y-2 font-medium text-yellow-900 bg-white p-4 rounded-xl">
+                <li>Verrate dein Passwort <strong>niemals</strong> deinen Freunden.</li>
+                <li>Nutze für wichtige Dinge (Schule, E-Mail) nicht dasselbe Passwort wie für kleine Spiele.</li>
+              </ul>
+              <div className="mt-6 p-4 bg-blue-100 border-2 border-blue-300 rounded-xl text-blue-900">
+                <p className="font-bold text-xl flex items-center gap-2 mb-2"><PenTool/> Aufgabe auf dem Arbeitsblatt:</p>
+                <p>Denke dir jetzt deinen eigenen Merksatz aus und schreibe das Passwort dazu auf! Zeige es danach <strong>nur deiner Lehrkraft</strong>!</p>
+              </div>
+            </div>
+            <button onClick={onComplete} className="w-full py-4 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl border-b-4 border-green-700 active:border-b-0 active:translate-y-1 transition-all text-xl">
+              Arbeitsblatt ist fertig! 📝
+            </button>
+          </div>
+        );
+
+        const Level4_2 = ({ onComplete }) => (
+          <div className="space-y-6 text-lg animate-fade-in-up">
+            <div className="bg-indigo-50 p-6 rounded-2xl border-4 border-indigo-300">
+              <h3 className="font-bold text-2xl text-indigo-800 mb-4 flex items-center gap-2">
+                <Smartphone /> Der doppelte Boden (Pro-Tipp)
+              </h3>
+              <p className="mb-4">Profis nutzen die <strong>Zwei-Faktor-Authentifizierung (2FA)</strong>. Das klingt kompliziert, ist aber wie eine Tür mit zwei Schlössern.</p>
+              
+              <div className="flex flex-col md:flex-row gap-4 mb-4">
+                <div className="flex-1 bg-white p-4 rounded-xl border-2 border-indigo-100 text-center">
+                  <Key className="text-4xl mx-auto text-indigo-400 mb-2 block" />
+                  <p className="font-bold">1. Passwort</p>
+                  <p className="text-sm">Dein Geheimnis im Kopf</p>
+                </div>
+                <div className="flex items-center justify-center font-bold text-2xl text-indigo-300">+</div>
+                <div className="flex-1 bg-white p-4 rounded-xl border-2 border-indigo-100 text-center">
+                  <Smartphone className="text-4xl mx-auto text-indigo-400 mb-2 block" />
+                  <p className="font-bold">2. Smartphone</p>
+                  <p className="text-sm">Ein Code, der per SMS/App kommt</p>
+                </div>
+              </div>
+              <p>Selbst wenn ein Hacker dein Passwort stiehlt, kommt er nicht rein, weil er dein Smartphone nicht hat!</p>
+            </div>
+            <button onClick={onComplete} className="w-full py-4 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl border-b-4 border-green-700 active:border-b-0 active:translate-y-1 transition-all text-xl">
+              Bereit für den Endboss! ⚔️
+            </button>
+          </div>
+        );
+
+        const Level4_3 = ({ onComplete }) => {
+          const [password, setPassword] = useState('');
+
+          const evaluatePassword = (pw) => {
+            let score = 0; let missing = [];
+            if (pw.length >= 8) score += 1; else missing.push("Mindestens 8 Zeichen");
+            if (/[A-Z]/.test(pw)) score += 1; else missing.push("Einen Großbuchstaben");
+            if (/[a-z]/.test(pw)) score += 1; else missing.push("Einen Kleinbuchstaben");
+            if (/[0-9]/.test(pw)) score += 1; else missing.push("Eine Zahl");
+            if (/[^A-Za-z0-9]/.test(pw)) score += 1; else missing.push("Ein Sonderzeichen (! ? % #)");
+            return { score, missing };
+          };
+
+          const { score, missing } = evaluatePassword(password);
+          
+          let color = 'bg-red-500'; let textColor = 'text-red-600'; let message = 'Noch zu schwach!';
+          if (score >= 3) { color = 'bg-yellow-500'; textColor = 'text-yellow-600'; message = 'Schon ganz gut!'; }
+          if (score === 5) { color = 'bg-green-500'; textColor = 'text-green-600'; message = 'PERFEKT!'; }
+
+          return (
+            <div className="space-y-6 text-lg text-center animate-fade-in-up">
+              <Trophy className="text-6xl mx-auto text-yellow-500 mb-2 block" />
+              <h3 className="font-bold text-3xl text-gray-800 mb-2">Finaler Boss: Computerraum</h3>
+              <p className="text-gray-600 mb-4">Erstelle jetzt ein perfektes Passwort für die Schule. Nutze deine ausgedachte Merksatz-Methode!</p>
+              
+              <div className="bg-gray-100 p-6 rounded-2xl border-4 border-gray-300">
+                <input 
+                  type="text" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Schul-Passwort eintippen..."
+                  className="w-full p-4 font-mono text-2xl border-4 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none text-center"
+                />
+
+                <div className="mt-6 text-left">
+                  <div className="flex justify-between mb-2">
+                    <span className={`font-bold ${textColor}`}>{password ? message : 'Warte auf Eingabe...'}</span>
+                    <span className="font-bold text-gray-500">{score}/5 Punkte</span>
+                  </div>
+                  <div className="h-4 w-full bg-gray-200 rounded-full overflow-hidden flex">
+                    {[1, 2, 3, 4, 5].map((val) => (
+                      <div key={val} className={`h-full flex-1 border-r border-white transition-all ${val <= score ? color : 'bg-transparent'}`} />
+                    ))}
+                  </div>
+                </div>
+
+                {score < 5 && password.length > 0 && (
+                  <div className="mt-4 bg-white p-4 rounded-xl text-left text-sm border-2 border-gray-200">
+                    <p className="font-bold flex items-center gap-2 text-gray-700"><Lightbulb className="text-yellow-500"/> Dir fehlt noch:</p>
+                    <ul className="list-disc list-inside mt-2 text-gray-600">
+                      {missing.map((item, idx) => <li key={idx}>{item}</li>)}
+                    </ul>
+                  </div>
+                )}
+
+                {score === 5 && (
+                  <button onClick={onComplete} className="mt-6 w-full animate-bounce py-4 bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-bold text-xl rounded-xl border-b-4 border-yellow-600 active:border-b-0 active:translate-y-1 transition-all shadow-lg">
+                    SPIEL GEWONNEN! 🏆
+                  </button>
+                )}
+              </div>
+            </div>
+          );
+        };
+
+
+        // --- HAUPTANWENDUNG (WELT-SYSTEM) ---
+
+        const WORLDS = [
+          {
+            id: 1,
+            title: "Welt 1: Tal der Geheimnisse",
+            color: "bg-green-400",
+            theme: "bg-green-50",
+            levels: [
+              { id: '1-1', title: 'Grundlagen', isBoss: false, Component: Level1_1 },
+              { id: '1-2', title: 'Schloss gesucht!', isBoss: false, Component: Level1_2 },
+              { id: '1-3', title: 'Burg des Türstehers', isBoss: true, Component: Level1_3 },
+            ]
+          },
+          {
+            id: 2,
+            title: "Welt 2: Hacker-Wald",
+            color: "bg-gray-700",
+            theme: "bg-gray-100",
+            levels: [
+              { id: '2-1', title: 'Die Top Flops', isBoss: false, Component: Level2_1 },
+              { id: '2-2', title: 'Hacker-Angriff', isBoss: false, Component: Level2_2 },
+              { id: '2-3', title: 'Phishing-Burg', isBoss: true, Component: Level2_3 },
+            ]
+          },
+          {
+            id: 3,
+            title: "Welt 3: Gipfel der Weisheit",
+            color: "bg-purple-500",
+            theme: "bg-purple-50",
+            levels: [
+              { id: '3-1', title: 'Der Meister-Trick', isBoss: false, Component: Level3_1 },
+              { id: '3-2', title: 'Satz-Übersetzer', isBoss: false, Component: Level3_2 },
+              { id: '3-3', title: 'Burg des Rätselmeisters', isBoss: true, Component: Level3_3 },
+            ]
+          },
+          {
+            id: 4,
+            title: "Welt 4: Festung der Sicherheit",
+            color: "bg-blue-600",
+            theme: "bg-blue-50",
+            levels: [
+              { id: '4-1', title: 'Geheime Aufbewahrung', isBoss: false, Component: Level4_1 },
+              { id: '4-2', title: 'Der doppelte Boden', isBoss: false, Component: Level4_2 },
+              { id: '4-3', title: 'Endboss: Computerraum', isBoss: true, Component: Level4_3 },
+            ]
+          }
+        ];
+
+        const App = () => {
+          const [maxUnlocked, setMaxUnlocked] = useState('1-1');
+          const [currentView, setCurrentView] = useState('map');
+          const [activeLevelId, setActiveLevelId] = useState(null);
+
+          const isUnlocked = (levelId) => {
+            return levelId <= maxUnlocked; 
+          };
+
+          const getNextLevelId = (currentId) => {
+            let [w, l] = currentId.split('-').map(Number);
+            if (l < 3) return `${w}-${l + 1}`;
+            if (w < 4) return `${w + 1}-1`;
+            return 'win';
+          };
+
+          const handleLevelComplete = () => {
+            const nextLevel = getNextLevelId(activeLevelId);
+            if (nextLevel === 'win') {
+              setCurrentView('win');
+            } else {
+              if (nextLevel > maxUnlocked) setMaxUnlocked(nextLevel);
+              setCurrentView('map');
+            }
+          };
+
+          const openLevel = (levelId) => {
+            if (isUnlocked(levelId)) {
+              setActiveLevelId(levelId);
+              setCurrentView('level');
+            }
+          };
+
+          let ActiveComponent = null;
+          let activeTheme = 'bg-white';
+          let activeTitle = '';
+
+          if (activeLevelId && currentView === 'level') {
+            WORLDS.forEach(w => {
+              w.levels.forEach(l => {
+                if (l.id === activeLevelId) {
+                  ActiveComponent = l.Component;
+                  activeTheme = w.theme;
+                  activeTitle = `${w.id}-${l.id.split('-')[1]}: ${l.title}`;
+                }
+              });
+            });
+          }
+
+          if (currentView === 'win') {
+            return (
+              <div className="min-h-screen bg-yellow-400 flex items-center justify-center p-4">
+                <div className="bg-white p-10 rounded-3xl shadow-2xl text-center max-w-xl border-8 border-yellow-500 animate-bounce">
+                  <Trophy className="text-7xl mx-auto text-yellow-500 mb-6 block" />
+                  <h1 className="text-5xl font-black text-gray-800 mb-4 uppercase tracking-wider">Geschafft!</h1>
+                  <p className="text-2xl text-gray-600 mb-8 font-bold">Du bist jetzt ein zertifizierter Passwort-Ninja!</p>
+                  <button 
+                    onClick={() => { setMaxUnlocked('1-1'); setCurrentView('map'); }}
+                    className="px-8 py-4 bg-blue-600 text-white font-bold rounded-xl border-b-4 border-blue-800 hover:bg-blue-500 text-xl"
+                  >
+                    Zurück zur Karte
+                  </button>
+                </div>
+              </div>
+            );
+          }
+
+          if (currentView === 'level') {
+            return (
+              <div className={`min-h-screen ${activeTheme} p-4 md:p-8 flex flex-col items-center justify-center font-sans transition-colors duration-500`}>
+                <div className="max-w-3xl w-full bg-white rounded-3xl shadow-xl overflow-hidden border-4 border-gray-200 animate-fade-in-up">
+                  
+                  <div className="bg-gray-800 p-4 text-white flex items-center justify-between">
+                    <button onClick={() => setCurrentView('map')} className="flex items-center gap-2 hover:text-gray-300 font-bold bg-gray-700 px-4 py-2 rounded-lg transition-colors">
+                      <MapIcon /> Karte
+                    </button>
+                    <h2 className="font-bold text-xl tracking-wide text-center flex-1">{activeTitle}</h2>
+                    <div className="w-24"></div> 
+                  </div>
+
+                  <div className="p-8 md:p-12">
+                    {ActiveComponent && <ActiveComponent onComplete={handleLevelComplete} />}
+                  </div>
+                  
+                </div>
+              </div>
+            );
+          }
+
+          return (
+            <div className="min-h-screen bg-sky-200 p-4 md:p-8 font-sans pb-20">
+              <div className="max-w-4xl mx-auto animate-fade-in-up">
+                <div className="bg-white/80 backdrop-blur-sm p-6 rounded-3xl shadow-lg border-4 border-white mb-8 text-center">
+                  <h1 className="text-4xl md:text-5xl font-black text-blue-900 tracking-tight uppercase" style={{ textShadow: '2px 2px 0px rgba(255,255,255,1)'}}>
+                    Super Passwort World 🍄
+                  </h1>
+                  <p className="text-lg font-bold text-blue-700 mt-2">Spiele dich durch alle Level und besiege die Burgen!</p>
+                </div>
+
+                <div className="space-y-8">
+                  {WORLDS.map((world, wIdx) => (
+                    <div key={world.id} className="relative bg-white/60 p-6 rounded-3xl border-4 border-white shadow-md" style={{animationDelay: `${wIdx * 100}ms`}}>
+                      <h2 className={`text-2xl font-black mb-6 flex items-center gap-3 ${world.color.replace('bg-', 'text-')}`}>
+                        <div className={`w-8 h-8 rounded-full ${world.color} text-white flex items-center justify-center text-sm`}>{world.id}</div>
+                        {world.title}
+                      </h2>
+
+                      <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative">
+                        <div className="hidden md:block absolute top-1/2 left-10 right-10 h-3 bg-gray-300 -z-10 rounded-full"></div>
+
+                        {world.levels.map((level) => {
+                          const unlocked = isUnlocked(level.id);
+                          const isCompleted = level.id < maxUnlocked;
+                          const isCurrent = level.id === maxUnlocked;
+
+                          return (
+                            <button 
+                              key={level.id}
+                              onClick={() => openLevel(level.id)}
+                              disabled={!unlocked}
+                              className={`relative flex flex-col items-center justify-center p-4 w-full md:w-1/3 transition-transform ${unlocked ? 'hover:-translate-y-2 cursor-pointer' : 'opacity-60 cursor-not-allowed grayscale'}`}
+                            >
+                              <div className={`w-20 h-20 rounded-full flex items-center justify-center border-4 shadow-lg mb-3
+                                ${level.isBoss ? 'rounded-xl ' + world.color : (unlocked ? world.color : 'bg-gray-400')}
+                                ${isCurrent ? 'ring-8 ring-yellow-400 animate-pulse' : ''}
+                                ${!unlocked ? 'border-gray-500' : 'border-white'}
+                              `}>
+                                {!unlocked ? <Lock className="text-2xl text-white opacity-50" /> : 
+                                 isCompleted ? <CheckCircle className="text-3xl text-white" /> : 
+                                 level.isBoss ? <ShieldCheck className="text-3xl text-white" /> : 
+                                 <Star className="text-2xl text-white" />}
+                              </div>
+                              
+                              <div className={`font-bold text-center px-3 py-1 rounded-full ${isCurrent ? 'bg-yellow-400 text-yellow-900' : 'bg-white text-gray-700'} shadow-sm border-2 border-gray-200 text-sm md:text-base`}>
+                                {level.id}: {level.title}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
