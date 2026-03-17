@@ -48,7 +48,7 @@
             box-shadow: 0 0px 0 rgba(0,0,0,0.2);
         }
         
-        /* Island 3D Effekt */
+        /* Island 3D Effekt für die Übersichtskarte */
         .island-3d {
             box-shadow: 0 15px 0 rgba(0,0,0,0.15), 0 20px 25px -5px rgba(0,0,0,0.1);
             transition: transform 0.2s, box-shadow 0.2s;
@@ -105,6 +105,111 @@
                     </div>
                 </div>
             );
+        };
+
+        // --- UNSERE SPIELFIGUR PASSI ---
+        const PassiCharacter = () => (
+            <div className="relative flex flex-col items-center animate-bounce z-50 hover:scale-110 transition-transform cursor-pointer" style={{ filter: 'drop-shadow(0px 6px 4px rgba(0,0,0,0.4))' }}>
+                <div className="absolute -top-8 bg-white text-[10px] font-black px-2 py-1 rounded-full border-2 border-blue-400 shadow-sm text-blue-600 whitespace-nowrap">Ich bin Passi!</div>
+                {/* Key Head (Gesicht) */}
+                <div className="relative bg-yellow-400 w-12 h-12 rounded-full border-4 border-yellow-600 flex items-center justify-center z-10 shadow-inner">
+                    <div className="absolute top-3 left-2.5 w-2 h-2 bg-black rounded-full"></div>
+                    <div className="absolute top-3 right-2.5 w-2 h-2 bg-black rounded-full"></div>
+                    <div className="absolute top-6 w-4 h-2 border-b-4 border-black rounded-full"></div>
+                    {/* Rosa Bäckchen */}
+                    <div className="absolute top-5 left-1 w-2 h-1.5 bg-pink-400 rounded-full opacity-60"></div>
+                    <div className="absolute top-5 right-1 w-2 h-1.5 bg-pink-400 rounded-full opacity-60"></div>
+                </div>
+                {/* Key Stem (Körper) */}
+                <div className="w-4 h-8 bg-yellow-400 border-x-4 border-b-4 border-yellow-600 -mt-2 relative z-0">
+                    <div className="absolute bottom-1 -right-4 w-5 h-2.5 bg-yellow-400 border-y-4 border-r-4 border-yellow-600 rounded-r-sm"></div>
+                    <div className="absolute bottom-5 -right-4 w-4 h-2.5 bg-yellow-400 border-y-4 border-r-4 border-yellow-600 rounded-r-sm"></div>
+                </div>
+            </div>
+        );
+
+        // --- HINTERGRÜNDE FÜR DIE WELTEN-MAPS ---
+        const WorldBackground = ({ worldId }) => {
+            switch(worldId) {
+                case 1: // Grasland
+                    return (
+                        <div className="absolute inset-0 bg-sky-300 overflow-hidden pointer-events-none">
+                            <div className="absolute top-10 left-20 text-white opacity-80 animate-float"><i className="fa-solid fa-cloud text-6xl"></i></div>
+                            <div className="absolute top-32 right-10 text-white opacity-60 animate-float" style={{animationDelay:'1s'}}><i className="fa-solid fa-cloud text-8xl"></i></div>
+                            <div className="absolute -bottom-32 -left-20 w-[150%] h-64 bg-green-500 rounded-[100%] border-t-8 border-green-600"></div>
+                            <div className="absolute -bottom-40 right-10 w-96 h-80 bg-green-400 rounded-[100%] border-t-8 border-green-500"></div>
+                            <div className="absolute -bottom-20 -left-10 w-80 h-60 bg-green-600 rounded-[100%] border-t-8 border-green-700"></div>
+                        </div>
+                    );
+                case 2: // Wüste
+                    return (
+                        <div className="absolute inset-0 bg-orange-200 overflow-hidden pointer-events-none">
+                            <div className="absolute top-10 left-1/4 text-yellow-100 opacity-90 animate-pulse"><i className="fa-solid fa-sun text-8xl"></i></div>
+                            <div className="absolute top-20 right-20 text-orange-300 opacity-50"><i className="fa-solid fa-cloud text-6xl"></i></div>
+                            <div className="absolute -bottom-20 -left-20 w-[120%] h-64 bg-yellow-500 rounded-[100%] border-t-8 border-yellow-600"></div>
+                            <div className="absolute -bottom-32 right-0 w-96 h-80 bg-yellow-400 rounded-[100%] border-t-8 border-yellow-500"></div>
+                        </div>
+                    );
+                case 3: // Wasserfall
+                    return (
+                        <div className="absolute inset-0 bg-blue-200 overflow-hidden pointer-events-none">
+                            <div className="absolute top-0 right-1/3 w-32 h-full bg-blue-400 opacity-60"></div>
+                            <div className="absolute top-0 right-1/3 w-8 h-full bg-blue-300 opacity-80 animate-pulse"></div>
+                            <div className="absolute top-10 left-10 text-white opacity-80 animate-float"><i className="fa-solid fa-cloud text-6xl"></i></div>
+                            <div className="absolute -bottom-20 -left-20 w-[150%] h-40 bg-blue-600 rounded-[100%] border-t-8 border-blue-700"></div>
+                            <div className="absolute bottom-10 left-20 text-gray-400"><i className="fa-solid fa-gem text-4xl"></i></div>
+                        </div>
+                    );
+                case 4: // Dschungel
+                    return (
+                        <div className="absolute inset-0 bg-emerald-800 overflow-hidden pointer-events-none">
+                            <div className="absolute -top-20 -left-10 w-64 h-64 bg-emerald-600 rounded-full border-b-8 border-emerald-700"></div>
+                            <div className="absolute -top-10 right-0 w-80 h-80 bg-emerald-500 rounded-full border-b-8 border-emerald-600"></div>
+                            <div className="absolute -bottom-20 -left-20 w-[150%] h-64 bg-emerald-900 rounded-[100%] border-t-8 border-emerald-950"></div>
+                            <div className="absolute top-1/2 left-10 text-emerald-400 opacity-30"><i className="fa-brands fa-envira text-8xl"></i></div>
+                        </div>
+                    );
+                case 5: // Eiswelt
+                    return (
+                        <div className="absolute inset-0 bg-cyan-100 overflow-hidden pointer-events-none">
+                            <div className="absolute top-10 left-10 text-white animate-float"><i className="fa-regular fa-snowflake text-4xl"></i></div>
+                            <div className="absolute top-32 right-20 text-white animate-float" style={{animationDelay:'1s'}}><i className="fa-regular fa-snowflake text-6xl"></i></div>
+                            <div className="absolute -bottom-20 -left-20 w-[120%] h-64 bg-white rounded-[100%] border-t-8 border-cyan-200"></div>
+                            <div className="absolute -bottom-32 right-10 w-96 h-80 bg-cyan-50 rounded-[100%] border-t-8 border-cyan-200"></div>
+                        </div>
+                    );
+                case 6: // Wolkenstadt
+                    return (
+                        <div className="absolute inset-0 bg-sky-200 overflow-hidden pointer-events-none">
+                            <div className="absolute top-20 left-10 text-white opacity-90 animate-float"><i className="fa-solid fa-cloud text-8xl"></i></div>
+                            <div className="absolute top-10 right-20 text-white opacity-80 animate-float" style={{animationDelay:'0.5s'}}><i className="fa-solid fa-cloud text-6xl"></i></div>
+                            <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-white rounded-full border-t-8 border-gray-100"></div>
+                            <div className="absolute -bottom-20 left-40 w-80 h-80 bg-white rounded-full border-t-8 border-gray-100"></div>
+                            <div className="absolute -bottom-10 right-0 w-72 h-72 bg-white rounded-full border-t-8 border-gray-100"></div>
+                        </div>
+                    );
+                case 7: // Lavaburg
+                    return (
+                        <div className="absolute inset-0 bg-red-950 overflow-hidden pointer-events-none">
+                            <div className="absolute top-20 right-20 w-32 h-32 bg-orange-500 rounded-full blur-2xl opacity-50 animate-pulse"></div>
+                            <div className="absolute bottom-10 left-10 w-64 h-64 bg-red-600 rounded-full blur-3xl opacity-40"></div>
+                            <div className="absolute -bottom-20 -left-20 w-[150%] h-40 bg-gray-900 rounded-[100%] border-t-8 border-orange-600"></div>
+                            <div className="absolute -bottom-10 left-1/4 w-1/2 h-20 bg-orange-500 rounded-[100%] blur-sm opacity-80 animate-pulse"></div>
+                        </div>
+                    );
+                case 8: // Sternenwelt
+                    return (
+                        <div className="absolute inset-0 bg-indigo-950 overflow-hidden pointer-events-none">
+                            <div className="absolute top-10 left-10 text-yellow-200 opacity-80 animate-pulse"><i className="fa-solid fa-star"></i></div>
+                            <div className="absolute top-40 right-20 text-yellow-200 opacity-60 animate-pulse" style={{animationDelay:'0.5s'}}><i className="fa-solid fa-star text-2xl"></i></div>
+                            <div className="absolute bottom-20 left-32 text-yellow-200 opacity-90 animate-pulse" style={{animationDelay:'1s'}}><i className="fa-solid fa-star text-sm"></i></div>
+                            <div className="absolute -bottom-40 -left-20 w-[150%] h-64 bg-purple-900 rounded-[100%] border-t-8 border-fuchsia-700"></div>
+                            <div className="absolute top-10 right-10 w-32 h-32 bg-fuchsia-600 rounded-full opacity-20 blur-xl"></div>
+                        </div>
+                    );
+                default:
+                    return <div className="absolute inset-0 bg-gray-200"></div>;
+            }
         };
 
         // --- LEVEL INHALTE (24 LEVEL) ---
@@ -622,12 +727,12 @@
                 WORLDS.forEach(w => w.levels.forEach(l => { if(l.n === activeLevelId) LvlComp = l.C; }));
                 
                 return (
-                    <div className="min-h-screen bg-sky-100 p-4 md:p-8 flex items-center justify-center">
-                        <div className="max-w-3xl w-full bg-white rounded-[2rem] shadow-[0_20px_0_rgba(0,0,0,0.1)] overflow-hidden border-8 border-white animate-fade-in-up">
-                            <div className="bg-gray-800 p-4 flex justify-between items-center text-white">
-                                <button onClick={()=>setView('world')} className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-xl font-bold shadow-sm transition-colors"><i className="fa-solid fa-arrow-left"></i> Welt</button>
+                    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4 md:p-8">
+                        <div className="w-full max-w-4xl bg-white rounded-[2rem] shadow-[0_20px_0_rgba(0,0,0,0.3)] overflow-hidden border-8 border-gray-700 animate-fade-in-up">
+                            <div className="bg-gray-800 p-4 flex justify-between items-center text-white border-b-4 border-gray-900">
+                                <button onClick={()=>setView('world')} className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-xl font-bold shadow-sm transition-colors border-2 border-gray-600"><i className="fa-solid fa-arrow-left"></i> Welt verlassen</button>
                                 <h2 className="font-black text-xl tracking-widest">LEVEL {activeLevelId}</h2>
-                                <div className="w-20"></div>
+                                <div className="w-32"></div>
                             </div>
                             <div className="p-8 md:p-12">
                                 {LvlComp && <LvlComp onComplete={onLevelComplete} />}
@@ -639,35 +744,108 @@
 
             if (view === 'world') {
                 const W = WORLDS.find(w => w.id === activeWorldId);
+                
+                // Fortschritt berechnen
+                const [maxW, maxL] = maxUnlocked.split('-').map(Number);
+                let progress = 0;
+                if (maxW > W.id) progress = 100;
+                else if (maxW === W.id) progress = Math.round(((maxL - 1) / W.levels.length) * 100);
+
                 return (
-                    <div className={`min-h-screen bg-gradient-to-b ${W.gradient} p-4 md:p-8 flex flex-col items-center justify-center`}>
-                        <div className="w-full max-w-4xl animate-pop-in">
-                            <div className="flex justify-between items-center mb-8">
-                                <Button3D color="gray" className="w-auto px-6" onClick={()=>setView('overview')}><i className="fa-solid fa-map"></i> Karte</Button3D>
-                                <h1 className={`text-4xl md:text-5xl font-black ${W.textWhite?'text-white':'text-gray-900'} drop-shadow-lg text-center`}>Welt {W.id}</h1>
-                                <div className="w-24"></div>
-                            </div>
+                    <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center p-4 md:p-8">
+                        
+                        {/* Wrapper für die Weltkarte */}
+                        <div className="w-full max-w-5xl animate-pop-in">
                             
-                            <div className="bg-white/20 backdrop-blur-md p-8 rounded-[3rem] shadow-2xl border-4 border-white/50 flex flex-col md:flex-row justify-around items-center gap-8 relative">
-                                <div className="absolute top-1/2 left-10 right-10 h-4 bg-white/30 rounded-full -z-10 hidden md:block"></div>
+                            {/* Kopfbalken über der Map */}
+                            <div className="flex justify-between items-center mb-4 text-white">
+                                <button onClick={()=>setView('overview')} className="bg-red-600 hover:bg-red-500 px-5 py-3 rounded-xl font-black shadow-md transition-colors border-b-4 border-red-800 flex items-center gap-2">
+                                    <i className="fa-solid fa-arrow-left"></i> Übersicht
+                                </button>
+                            </div>
+
+                            {/* Die 2D Map im Screenshot-Style */}
+                            <div className="relative w-full aspect-square md:aspect-video rounded-3xl overflow-hidden border-8 border-gray-800 shadow-2xl bg-sky-200">
                                 
-                                {W.levels.map(l => {
+                                {/* Der Welt-Hintergrund */}
+                                <WorldBackground worldId={W.id} />
+
+                                {/* UI: Welt Name (Oben Links) */}
+                                <div className="absolute top-4 left-4 bg-gray-800 text-white font-black px-4 py-2 rounded-xl shadow-lg border-2 border-gray-600 z-30 uppercase tracking-widest text-sm md:text-base">
+                                    Welt {W.id}: {W.title}
+                                </div>
+
+                                {/* UI: Fortschritt (Oben Rechts) */}
+                                <div className="absolute top-4 right-4 bg-white text-gray-800 font-black px-4 py-2 rounded-xl shadow-lg border-2 border-gray-200 z-30 w-48">
+                                    <div className="flex justify-between text-xs mb-1 text-gray-500">
+                                        <span>FORTSCHRITT</span>
+                                        <span>{progress}%</span>
+                                    </div>
+                                    <div className="w-full h-3 bg-gray-200 rounded-full border border-gray-300 overflow-hidden">
+                                        <div className="h-full bg-blue-500 transition-all" style={{width: `${progress}%`}}></div>
+                                    </div>
+                                </div>
+
+                                {/* Der gestrichelte Pfad */}
+                                <svg className="absolute inset-0 w-full h-full pointer-events-none z-10">
+                                    {/* Pfad 1: Start zu Mitte */}
+                                    <line x1="20%" y1="75%" x2="55%" y2="55%" stroke="#eab308" strokeWidth="6" strokeDasharray="10 10" strokeLinecap="round" />
+                                    <line x1="20%" y1="75%" x2="55%" y2="55%" stroke="#ca8a04" strokeWidth="6" strokeDasharray="10 10" transform="translate(0, 4)" className="opacity-50" />
+                                    
+                                    {/* Pfad 2: Mitte zu Boss */}
+                                    <line x1="55%" y1="55%" x2="30%" y2="25%" stroke="#eab308" strokeWidth="6" strokeDasharray="10 10" strokeLinecap="round" />
+                                    <line x1="55%" y1="55%" x2="30%" y2="25%" stroke="#ca8a04" strokeWidth="6" strokeDasharray="10 10" transform="translate(0, 4)" className="opacity-50" />
+                                </svg>
+
+                                {/* Level Knotenpunkte auf der Map */}
+                                {W.levels.map((l, idx) => {
                                     const unl = isUnlocked(l.n);
                                     const comp = isCompleted(l.n);
                                     const curr = l.n === maxUnlocked;
                                     
+                                    const [maxW, maxL] = maxUnlocked.split('-').map(Number);
+                                    const isPassiHere = (W.id === maxW && (idx + 1) === maxL) || (W.id < maxW && idx === W.levels.length - 1);
+
+                                    // Feste Positionen für die 3 Nodes im ZickZack
+                                    const pos = idx === 0 ? {left:'20%', top:'75%'} : idx === 1 ? {left:'55%', top:'55%'} : {left:'30%', top:'25%'};
+
                                     return (
-                                        <button 
-                                            key={l.n} 
-                                            disabled={!unl} 
-                                            onClick={() => { setActiveLevelId(l.n); setView('level'); }}
-                                            className={`island-3d flex flex-col items-center justify-center w-full md:w-1/3 p-6 rounded-3xl ${unl ? 'bg-white cursor-pointer' : 'bg-gray-300/50 cursor-not-allowed grayscale'} ${curr ? 'ring-8 ring-yellow-400 animate-pulse' : ''}`}
-                                        >
-                                            <div className={`w-24 h-24 rounded-full flex items-center justify-center text-4xl text-white mb-4 shadow-inner ${unl ? (l.boss ? 'bg-red-500 rounded-xl' : 'bg-blue-500') : 'bg-gray-400'}`}>
-                                                {comp ? <i className="fa-solid fa-check"></i> : (!unl ? <i className="fa-solid fa-lock"></i> : (l.boss ? <i className="fa-brands fa-fort-awesome"></i> : <span className="font-black text-2xl">{l.n}</span>))}
+                                        <div key={l.n} className="absolute z-20 transform -translate-x-1/2 -translate-y-1/2" style={pos}>
+                                            
+                                            {/* START-Schild am ersten Level */}
+                                            {idx === 0 && <div className="absolute -bottom-10 -left-10 bg-red-600 text-white font-black text-sm px-3 py-1 transform -rotate-12 border-2 border-white rounded shadow-lg z-30">START</div>}
+                                            
+                                            {/* Passi die Spielfigur */}
+                                            {isPassiHere && (
+                                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 z-50 pointer-events-none">
+                                                    <PassiCharacter />
+                                                </div>
+                                            )}
+
+                                            <button 
+                                                disabled={!unl}
+                                                onClick={() => { setActiveLevelId(l.n); setView('level'); }}
+                                                className={`relative flex items-center justify-center shadow-xl transition-transform hover:scale-110 
+                                                    ${l.boss ? 'w-24 h-24 rounded-3xl' : 'w-16 h-16 rounded-full'}
+                                                    ${curr ? 'bg-yellow-400 border-4 border-white ring-4 ring-yellow-400 animate-pulse' : 
+                                                      comp ? 'bg-blue-500 border-4 border-white opacity-90' : 
+                                                      'bg-gray-400 border-4 border-gray-300 opacity-90'}`}
+                                            >
+                                                {/* Icon in der Mitte des Knotens */}
+                                                {curr ? <i className="fa-solid fa-play text-2xl text-yellow-900 ml-1 drop-shadow-sm"></i> :
+                                                 comp ? <i className="fa-solid fa-check text-2xl text-white drop-shadow-sm"></i> :
+                                                 <i className={`fa-solid fa-lock text-2xl ${l.boss ? 'text-gray-300' : 'text-gray-200'} drop-shadow-sm`}></i>}
+                                                
+                                                {/* Schattiertes Boss-Icon im Hintergrund (wenn es eine Burg ist) */}
+                                                {l.boss && !comp && !curr && <i className="fa-brands fa-fort-awesome absolute text-5xl text-gray-500 opacity-20 pointer-events-none"></i>}
+                                                {l.boss && (comp || curr) && <i className="fa-brands fa-fort-awesome absolute text-5xl text-white opacity-30 pointer-events-none"></i>}
+                                            </button>
+                                            
+                                            {/* Unsichtbares Label drunter */}
+                                            <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-900/80 text-white text-xs font-bold px-3 py-1 rounded-full pointer-events-none">
+                                                {l.boss ? 'Boss-Burg' : `Level ${idx + 1}`}
                                             </div>
-                                            <span className="font-black text-xl text-gray-800 bg-gray-100 px-4 py-2 rounded-xl shadow-sm">{l.boss ? 'Boss-Burg' : 'Level '+l.n}</span>
-                                        </button>
+                                        </div>
                                     )
                                 })}
                             </div>
@@ -676,7 +854,7 @@
                 );
             }
 
-            // OVERVIEW MAP
+            // OVERVIEW MAP (3D Inseln)
             return (
                 <div className="min-h-screen bg-sky-300 pb-20 relative overflow-hidden">
                     {/* Wolken Deko */}
@@ -691,6 +869,8 @@
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                             {WORLDS.map((w, i) => {
                                 const wUnlocked = isUnlocked(`${w.id}-1`);
+                                const [maxW, maxL] = maxUnlocked.split('-').map(Number);
+                                const isPassiHereOnMap = w.id === maxW;
                                 
                                 return (
                                     <button 
@@ -706,6 +886,13 @@
                                         <h2 className="font-black text-2xl mb-2 drop-shadow-md">{w.title}</h2>
                                         <div className="bg-black/20 px-4 py-1 rounded-full font-bold text-sm">Welt {w.id}</div>
                                         
+                                        {/* Passi auf der Weltkarte */}
+                                        {wUnlocked && isPassiHereOnMap && (
+                                            <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 z-50 pointer-events-none">
+                                                <PassiCharacter />
+                                            </div>
+                                        )}
+
                                         {/* Neue Welt Indikator */}
                                         {wUnlocked && maxUnlocked.startsWith(`${w.id}-`) && (
                                             <div className="absolute -top-4 -right-4 bg-red-500 text-white font-black px-4 py-2 rounded-full shadow-lg animate-bounce border-2 border-white">
